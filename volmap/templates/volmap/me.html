@@ -1,0 +1,93 @@
+{% extends 'volmap/base.html' %}
+{% block me_active %}active{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="container">
+    <div class="row">
+        <h4>Sign up</h4>
+        {% if future_activities %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td>Name</td>
+                <td>Due</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for activity in future_activities %}
+            <tr>
+                <td>{{ activity.name }}</td>
+                <td>{{ activity.due }}</td>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="well well-sm row"><h4>No activities.</h4></div>
+        {% endif %}
+    </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <h4>Previous Activities</h4>
+            {% if past_activities %}
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Due</td>
+                    <!--
+                    <td>Participants</td>
+                    -->
+                </tr>
+                </thead>
+                <tbody>
+                {% for activity in past_activities %}
+                <tr>
+                    <td>{{ activity.name }}</td>
+                    <td>{{ activity.due }}</td>
+                    <!--
+                    <td>
+                        {% for user in activity.user.all %}
+                        {{ user }} &nbsp;
+                        {% endfor %}
+                    </td>
+                    -->
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="well well-sm row"><h4>No activities.</h4></div>
+            {% endif %}
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if past_activities.has_previous %}
+                <li>
+                    <a href="?page={{ past_activities.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for pg in past_activities.paginator.page_range %}
+                <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+                {% endfor %}
+
+                {% if past_activities.has_next %}
+                <li>
+                    <a href="?page={{ past_activities.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

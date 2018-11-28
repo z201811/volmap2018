@@ -1,0 +1,94 @@
+{% extends 'volmap/base.html' %}
+{% block activity_active %}active{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="container">
+        <div class="row">
+            <h4>Activities around the corner</h4>
+            {% if future_activities %}
+                {% for activity in future_activities %}
+                <div class="well well-sm row">
+                    <div class="col-sm-10">
+                        <p><strong>{{ activity.name }}</strong> </p>
+                        <p><strong>Due:</strong> {{ activity.due }}</p>
+                        <p><strong>Brief:</strong> {{ activity.brief }}</p>
+                        {% if activity.site %}
+                        <a href="{% url 'volmap:route' activity.site %}">Site (Map Route Plan): {{ activity.site }}</a>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-2">
+                        <form action="{% url 'volmap:signup' activity.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="activity_id" value="{{ activity.id }}" />
+                            {% if is_auth %}
+                                {% if user %}
+                                {% if user in activity.user.all %}
+                                <button type="submit" class="btn btn-default btn-sm">
+                                    Cancel
+                                </button>
+                                {% else %}
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    Sign up
+                                </button>
+                                {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </form>
+                    </div>
+
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="well well-sm row"><h4>No activities.</h4></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <h4>Previous Activities</h4>
+            {% if past_activities %}
+            {% for activity in past_activities %}
+            <div class="well well-sm row">
+                <div class="col-sm-12">
+                    <p><strong>{{ activity.name }}</strong></p>
+                    <p><strong>Due:</strong> {{ activity.due }}</p>
+                    <p><strong>Brief:</strong> {{ activity.brief }}</p>
+                </div>
+
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="well well-sm row"><h4>No activities.</h4></div>
+            {% endif %}
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if past_activities.has_previous %}
+                <li>
+                    <a href="?page={{ past_activities.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for pg in past_activities.paginator.page_range %}
+                <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+                {% endfor %}
+
+                {% if past_activities.has_next %}
+                <li>
+                    <a href="?page={{ past_activities.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+

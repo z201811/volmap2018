@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Love Map{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'volmap/bootstrap-3.3.7-dist/css/bootstrap.min.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'volmap/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}" >
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'volmap:index' %}"><span class="glyphicon glyphicon-heart-empty"></span> LoveMap</a>
+        </div>
+
+        <!-- Items -->
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+                <li class="{% block activity_active %}{% endblock %}">
+                    <a href="{% url 'volmap:index' %}">Activities</a>
+                </li>
+                {% if is_auth %}
+                <li class="{% block me_active %}{% endblock %}">
+                    <a href="{% url 'volmap:me' %}">Me</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            {% if is_auth %}
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="{% url 'volmap:logout' %}">
+                        {{ user.username }}
+                        <span class="glyphicon glyphicon-off"></span>
+                    </a>
+                </li>
+            </ul>
+            {% else %}
+            <form class="navbar-form navbar-right" role="form" action="{% url 'volmap:login' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input class="form-control" maxlength="20" name="username" type="text" placeholder="Username" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" maxlength="20" name="password" type="password" placeholder="Password" >
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-log-in"></span></button>
+                </div>
+
+            </form>
+            {% if error_message %}
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div class="alert-danger">{{ error_message }}</div>
+                </li>
+            </ul>
+            {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+
+{% block body %}
+{% endblock %}
+
+{% load static %}
+<script src="{% static 'volmap/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'volmap/bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
