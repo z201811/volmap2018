@@ -1,0 +1,42 @@
+{% extends 'volmap/base.html' %}
+{% block me_active %}active{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        {% if sign_ups %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td>Name</td>
+                <td>Achieve</td>
+                <td>Duty</td>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for sign_up in sign_ups %}
+            <tr>
+                <td>{{ sign_up.user.username }}</td>
+                <td>
+                    {% if sign_up.achieve %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </td>
+                <td>
+                    {{ sign_up.duty }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h4>No participants.</h4>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

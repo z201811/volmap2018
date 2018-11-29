@@ -23,7 +23,7 @@ class Signup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
     achieve = models.BooleanField(default=False)
-    duty = models.CharField(max_length=20)
+    duty = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         s = self.activity.name + ': ' + str(self.user) + ' - ' + str(self.achieve)

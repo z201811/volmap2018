@@ -68,8 +68,18 @@ def signup(request, activity_id):
 
     return redirect('volmap:index')
 
+
 def route(request, destination):
     destination_point = {'keyword': destination, 'city': '北京'}
     context = {'destination': destination_point}
     return render(request, 'volmap/route.html', context)
+
+
+def activity_detail(request, activity_id):
+    if not request.user.is_authenticated:
+        return redirect('volmap:index')
+
+    sign_ups = Signup.objects.filter(activity_id=activity_id)
+    context = {'is_auth': request.user.is_authenticated, 'sign_ups': sign_ups}
+    return render(request, 'volmap/activity_detail.html', context)
 
